@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Quản Lý Cửa Hàng Cà Phê / Trà Sữa | IE103 Đề Tài 2</title>
+  <style>
+    :root {
+      --primary: #964B00;
+      --primary-dark: #6F3700;
+      --primary-light: #F7EFE9;
+      --accent: #E07A5F;
+      --secondary: #3D405B;
+      --success: #2A9D8F;
+      --warning: #E76F51;
+      --danger: #E63946;
+      --bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text: #2B2D42;
+      --text-muted: #6C757D;
+      --border: #E2E8F0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #4A2810 0%, #78350F 100%);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { font-size: 28px; background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 12px; }
+    .brand-title { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
+    .brand-sub { font-size: 12px; opacity: 0.85; }
+
+    .header-controls { display: flex; align-items: center; gap: 16px; }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .role-badge.quanly { background: #FEF3C7; color: #92400E; }
+    .role-badge.thungan { background: #E0E7FF; color: #3730A3; }
+
+    .switch-btn {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .switch-btn:hover { background: rgba(255,255,255,0.3); }
+
+    /* NAVIGATION TABS */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .nav-tab {
+      padding: 14px 18px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--primary); }
+    .nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .nav-tab.disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* MAIN CONTAINER */
+    main { flex: 1; padding: 20px 24px; max-width: 1600px; width: 100%; margin: 0 auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.25s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* POS SECTION */
+    .pos-layout { display: grid; grid-template-columns: 1fr 400px; gap: 20px; height: calc(100vh - 150px); }
+    .pos-menu { display: flex; flex-direction: column; overflow: hidden; background: #fff; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; }
+    .pos-cart { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; }
+
+    .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+    .cat-btn {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: #F8F9FA;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover { background: var(--primary-light); color: var(--primary); }
+    .cat-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .search-bar { margin-bottom: 14px; }
+    .search-input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; outline: none; }
+    .search-input:focus { border-color: var(--primary); }
+
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; overflow-y: auto; flex: 1; padding-right: 4px; }
+    .product-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .product-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); border-color: #D5B895; }
+    .prod-icon { font-size: 32px; margin-bottom: 8px; text-align: center; }
+    .prod-name { font-weight: 600; font-size: 14px; line-height: 1.3; margin-bottom: 4px; color: #1E293B; }
+    .prod-category { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+    .prod-price { font-weight: 700; color: var(--primary); font-size: 15px; }
+
+    /* CART STYLES */
+    .cart-header { padding: 14px 18px; border-bottom: 1px solid var(--border); background: #FAF5F0; display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h3 { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
+    .cart-config { padding: 12px 18px; border-bottom: 1px solid var(--border); background: #fff; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cart-config select, .cart-config input { padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; width: 100%; }
+
+    .cart-items { flex: 1; overflow-y: auto; padding: 12px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: #F8F9FA;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-title { font-size: 13px; font-weight: 600; color: #1E293B; }
+    .cart-item-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .cart-item-qty { display: flex; align-items: center; gap: 6px; margin: 0 10px; }
+    .qty-btn { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-weight: bold; }
+    .cart-item-price { font-weight: 700; font-size: 13px; color: var(--primary); min-width: 65px; text-align: right; }
+    .del-btn { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 8px; }
+
+    .cart-footer { padding: 16px 18px; border-top: 1px solid var(--border); background: #FAF5F0; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
+    .summary-row.total { font-size: 17px; font-weight: 700; color: #1E293B; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 8px; }
+    .summary-row.total .val { color: var(--primary); font-size: 19px; }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #964B00 0%, #78350F 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: 0 4px 8px rgba(150, 75, 0, 0.25);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .checkout-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(150, 75, 0, 0.35); }
+
+    /* TABLES AND CARDS GENERAL */
+    .card { background: #fff; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 20px; margin-bottom: 20px; }
+    .card-title { font-size: 17px; font-weight: 700; color: #1E293B; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { background: #F8F9FA; font-weight: 600; color: var(--text-muted); }
+    .data-table tr:hover { background: #FAF5F0; }
+
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge.success { background: #DCFCE7; color: #166534; }
+    .badge.warning { background: #FEF3C7; color: #92400E; }
+    .badge.danger { background: #FEE2E2; color: #991B1B; }
+
+    /* STATS CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .stat-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+    .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+    .stat-value { font-size: 26px; font-weight: 800; color: var(--primary-dark); }
+    .stat-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* MODALS */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
+    .modal-box { background: #fff; border-radius: 12px; width: 90%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column; }
+    .modal-header { padding: 16px 20px; background: #FAF5F0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 14px 20px; background: #F8F9FA; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+    /* CRYSTAL REPORT RECEIPT STYLES */
+    .receipt-container {
+      font-family: 'Courier New', Courier, monospace;
+      background: #FFFDF9;
+      padding: 24px 20px;
+      border: 1px solid #E2D9D2;
+      border-radius: 6px;
+      color: #222;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .receipt-header { text-align: center; border-bottom: 1px dashed #444; padding-bottom: 12px; margin-bottom: 12px; }
+    .receipt-title { font-size: 17px; font-weight: bold; letter-spacing: 0.5px; }
+    .receipt-sub { font-size: 11px; margin-top: 3px; color: #444; }
+    .receipt-meta { font-size: 11px; line-height: 1.5; margin-bottom: 12px; border-bottom: 1px dashed #444; padding-bottom: 8px; }
+    .receipt-items { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 12px; }
+    .receipt-items th { border-bottom: 1px dashed #444; padding: 4px 0; text-align: left; }
+    .receipt-items td { padding: 4px 0; }
+    .receipt-summary { font-size: 12px; line-height: 1.6; border-top: 1px dashed #444; padding-top: 8px; margin-bottom: 12px; }
+    .receipt-summary .row { display: flex; justify-content: space-between; }
+    .receipt-summary .total-row { font-size: 14px; font-weight: bold; border-top: 1px solid #222; padding-top: 4px; margin-top: 4px; }
+    .receipt-qr { text-align: center; margin: 12px 0 8px; }
+    .receipt-footer { text-align: center; font-size: 10.5px; color: #555; border-top: 1px dashed #444; padding-top: 10px; }
+
+    /* FORM ELEMENTS */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #374151; }
+    .form-control { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 13.5px; outline: none; }
+    .form-control:focus { border-color: var(--primary); }
+    .btn { padding: 8px 16px; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #E2E8F0; color: var(--text); }
+    .btn-secondary:hover { background: #CBD5E1; }
+    .btn-success { background: var(--success); color: #fff; }
+
+    /* ALERT / NOTIFICATION */
+    .stock-alert-box {
+      background: #FEE2E2;
+      border: 1px solid #F87171;
+      color: #991B1B;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">☕</div>
+      <div>
+        <div class="brand-title">UIT COFFEE & TEA HOUSE</div>
+        <div class="brand-sub">Hệ Thống Quản Lý Cửa Hàng Cà Phê / Trà Sữa — IE103 Đề Tài 2</div>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div id="userBadge" class="role-badge quanly">
+        <span>👤</span>
+        <span id="userNameRole">Nguyễn Văn Quản Lý (Quản Lý)</span>
+      </div>
+      <button class="switch-btn" onclick="quickSwitchRole()">
+        🔄 Đổi Quyền Nhanh (Quản Lý ⇄ Thu Ngân)
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav id="mainNav">
+    <button class="nav-tab active" onclick="switchTab('pos')">🛒 Bán Hàng (POS)</button>
+    <button class="nav-tab manager-only" onclick="switchTab('menu')">📋 Quản Lý Món</button>
+    <button class="nav-tab manager-only" onclick="switchTab('recipes')">⚖️ Định Lượng (Recipe)</button>
+    <button class="nav-tab manager-only" onclick="switchTab('inventory')">📦 Kho & Nhập Hàng</button>
+    <button class="nav-tab manager-only" onclick="switchTab('reports')">📊 Báo Cáo & Crystal Report</button>
+    <button class="nav-tab manager-only" onclick="switchTab('employees')">👥 Nhân Viên & Quyền</button>
+  </nav>
+
+  <!-- MAIN VIEW -->
+  <main>
+
+    <!-- 1. TAB BÁN HÀNG (POS) -->
+    <section id="tab-pos" class="tab-content active">
+      <div class="pos-layout">
+        <!-- Cột trái: Thực đơn món -->
+        <div class="pos-menu">
+          <div class="category-filter" id="categoryFilter">
+            <button class="cat-btn active" onclick="filterByCategory('')">Tất cả món</button>
+          </div>
+          <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm món cà phê, trà sữa, bánh ngọt..." oninput="handleSearch()">
+          </div>
+          <div class="product-grid" id="productGrid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Cột phải: Giỏ hàng & Thanh toán -->
+        <div class="pos-cart">
+          <div class="cart-header">
+            <h3>🛒 Hóa Đơn Hiện Tại</h3>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="clearCart()">Xóa trắng</button>
+          </div>
+
+          <div class="cart-config">
+            <div>
+              <label style="font-size: 11px; color: var(--text-muted); font-weight: bold;">BÀN / KHU VỰC</label>
+              <select id="cartTable">
+                <option value="">Mang về (Takeaway)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--text-muted); font-weight: bold;">THANH TOÁN</label>
+              <select id="cartPayment">
+                <option value="TienMat">Tiền mặt</option>
+                <option value="ChuyenKhoan">Chuyển khoản QR</option>
+                <option value="The">Thẻ POS</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cart-items" id="cartItems">
+            <div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
+              Chưa có món nào được chọn.<br>Nhấp vào món ở menu bên trái để thêm!
+            </div>
+          </div>
+
+          <div class="cart-footer">
+            <div class="summary-row">
+              <span>Tổng tiền hàng:</span>
+              <span id="subTotalText">0 đ</span>
+            </div>
+            <div class="summary-row">
+              <span>Giảm giá (Voucher):</span>
+              <input type="number" id="discountInput" value="0" min="0" step="5000" style="width: 80px; text-align: right; padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px;" oninput="updateCartSummary()">
+            </div>
+            <div class="summary-row total">
+              <span>Tổng thanh toán:</span>
+              <span class="val" id="finalTotalText">0 đ</span>
+            </div>
+            <div class="summary-row" id="cashInputRow" style="margin-top: 8px;">
+              <span>Tiền khách đưa:</span>
+              <input type="number" id="cashGivenInput" value="0" min="0" step="10000" style="width: 100px; text-align: right; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px;" oninput="updateChange()">
+            </div>
+            <div class="summary-row" id="changeRow">
+              <span>Tiền thối lại:</span>
+              <span id="changeText" style="font-weight: bold; color: var(--success);">0 đ</span>
+            </div>
+
+            <button class="checkout-btn" onclick="executeCheckout()">
+              <span>⚡ THANH TOÁN & TRỪ TỒN KHO</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TAB QUẢN LÝ MÓN -->
+    <section id="tab-menu" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>📋 Danh Sách Món & Giá Bán Theo Size</span>
+          <button class="btn btn-primary" onclick="openAddProductModal()">+ Thêm Món Mới</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="menuTable">
+            <thead>
+              <tr>
+                <th>Mã SP</th>
+                <th>Tên Món</th>
+                <th>Danh Mục</th>
+                <th>Giá Size S</th>
+                <th>Giá Size M</th>
+                <th>Giá Size L</th>
+                <th>Trạng Thái</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TAB ĐỊNH LƯỢNG NGUYÊN LIỆU (RECIPE) -->
+    <section id="tab-recipes" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>⚖️ Công Thức Định Lượng Tiêu Hao Nguyên Liệu (Recipe)</span>
+          <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">
+            * Dữ liệu này dùng cho TRIGGER tự động trừ kho khi bán hàng
+          </span>
+        </div>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <select id="recipeProductFilter" class="form-control" style="max-width: 300px;" onchange="loadRecipes()">
+            <option value="">-- Xem tất cả món --</option>
+          </select>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="recipesTable">
+            <thead>
+              <tr>
+                <th>Tên Món</th>
+                <th>Size</th>
+                <th>Nguyên Liệu Cần Tiêu Hao</th>
+                <th>Lượng Tiêu Hao Cho 1 Ly</th>
+                <th>Ghi Chú Công Thức</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TAB KHO NGUYÊN LIỆU -->
+    <section id="tab-inventory" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">TỔNG NGUYÊN LIỆU</div>
+          <div class="stat-value" id="statTotalIngredients">16</div>
+          <div class="stat-desc">Đang theo dõi định mức</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">CẢNH BÁO SẮP HẾT</div>
+          <div class="stat-value" id="statLowStock" style="color: var(--danger);">0</div>
+          <div class="stat-desc">Dưới ngưỡng tối thiểu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">QUY CHUẨN TỒN KHO</div>
+          <div class="stat-value" style="color: var(--success); font-size: 22px;">Tự Động Trừ Kho</div>
+          <div class="stat-desc">Kiểm tra qua TRIGGER CSDL</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>📦 Tồn Kho Nguyên Liệu Hiện Tại</span>
+          <button class="btn btn-primary" onclick="openImportModal()">📥 Nhập Kho Nguyên Liệu</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="inventoryTable">
+            <thead>
+              <tr>
+                <th>Mã NL</th>
+                <th>Tên Nguyên Liệu</th>
+                <th>ĐVT</th>
+                <th>Số Lượng Tồn Hiện Có</th>
+                <th>Ngưỡng Cảnh Báo</th>
+                <th>Đơn Giá Nhập BQ</th>
+                <th>Tình Trạng Kho</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>📜 Lịch Sử Biến Động Kho (Audit Trail do Bán Hàng & Nhập Kho)</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="stockHistoryTable">
+            <thead>
+              <tr>
+                <th>Mã LS</th>
+                <th>Thời Gian</th>
+                <th>Nguyên Liệu</th>
+                <th>Loại Giao Dịch</th>
+                <th>Biến Động</th>
+                <th>Tồn Sau Đó</th>
+                <th>Chứng Từ / Mã HĐ</th>
+                <th>Ghi Chú</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. TAB BÁO CÁO DOANH THU & CRYSTAL REPORT -->
+    <section id="tab-reports" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">DOANH THU HÔM NAY (fn_TinhDoanhThuTheoNgay)</div>
+          <div class="stat-value" id="statTodayRevenue">0 đ</div>
+          <div class="stat-desc" id="statTodayCount">0 hóa đơn đã thanh toán</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">DOANH THU THÁNG NÀY (fn_TinhDoanhThuTheoThang)</div>
+          <div class="stat-value" id="statMonthRevenue">0 đ</div>
+          <div class="stat-desc" id="statMonthCount">Tháng 10/2026</div>
+        </div>
+      </div>
+
+      <!-- BỘ LỌC TRA CỨU FUNCTION -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍 Tra Cứu Doanh Thu Theo Function (Cơ Sở Dữ Liệu)</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div style="padding: 16px; background: #FAF5F0; border-radius: 8px;">
+            <h4 style="margin-bottom: 10px; color: var(--primary-dark);">1. Gọi Hàm: fn_TinhDoanhThuTheoNgay(@Ngay)</h4>
+            <div style="display: flex; gap: 10px;">
+              <input type="date" id="queryDateInput" class="form-control" value="2026-10-18">
+              <button class="btn btn-primary" onclick="queryRevenueByDay()">Truy Vấn</button>
+            </div>
+            <div id="dayQueryResult" style="margin-top: 12px; font-weight: bold; color: var(--primary);"></div>
+          </div>
+
+          <div style="padding: 16px; background: #FAF5F0; border-radius: 8px;">
+            <h4 style="margin-bottom: 10px; color: var(--primary-dark);">2. Gọi Hàm: fn_TinhDoanhThuTheoThang(@Thang, @Nam)</h4>
+            <div style="display: flex; gap: 10px;">
+              <select id="queryMonthSelect" class="form-control" style="width: 100px;">
+                <option value="10" selected>Tháng 10</option>
+                <option value="9">Tháng 9</option>
+                <option value="8">Tháng 8</option>
+              </select>
+              <select id="queryYearSelect" class="form-control" style="width: 100px;">
+                <option value="2026" selected>2026</option>
+                <option value="2025">2025</option>
+              </select>
+              <button class="btn btn-primary" onclick="queryRevenueByMonth()">Truy Vấn</button>
+            </div>
+            <div id="monthQueryResult" style="margin-top: 12px; font-weight: bold; color: var(--primary);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DANH SÁCH HÓA ĐƠN VÀ IN CRYSTAL REPORT -->
+      <div class="card">
+        <div class="card-title">
+          <span>🧾 Danh Sách Hóa Đơn & Xuất Crystal Report</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="invoicesTable">
+            <thead>
+              <tr>
+                <th>Mã HĐ</th>
+                <th>Thời Gian</th>
+                <th>Khu Vực / Bàn</th>
+                <th>Thu Ngân</th>
+                <th>PT Thanh Toán</th>
+                <th>Tổng Tiền</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. TAB NHÂN VIÊN & PHÂN QUYỀN -->
+    <section id="tab-employees" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>👥 Danh Sách Nhân Viên & Phân Quyền Người Dùng</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="employeeTable">
+            <thead>
+              <tr>
+                <th>Mã NV</th>
+                <th>Họ Tên</th>
+                <th>Tên Đăng Nhập</th>
+                <th>Số Điện Thoại</th>
+                <th>Email</th>
+                <th>Vai Trò (Role)</th>
+                <th>Trạng Thái</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL CHỌN SIZE & TOPPING KHI BẤM MÓN -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalProdTitle">Chọn Size Món</h3>
+        <button class="modal-close" onclick="closeModal('productModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalProdIcon" style="font-size: 40px; text-align: center; margin-bottom: 10px;"></div>
+        <div id="modalProdDesc" style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;"></div>
+
+        <div class="form-group">
+          <label class="form-label">Chọn Kích Cỡ (Size):</label>
+          <div id="sizeOptionList" style="display: flex; gap: 10px;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Số Lượng:</label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="btn btn-secondary" onclick="adjustModalQty(-1)">-</button>
+            <input type="number" id="modalQty" value="1" min="1" style="width: 70px; text-align: center; padding: 6px; border: 1px solid var(--border); border-radius: 4px;">
+            <button class="btn btn-secondary" onclick="adjustModalQty(1)">+</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ghi Chú Pha Chế (Đường, Đá, Topping):</label>
+          <input type="text" id="modalNote" class="form-control" placeholder="Ví dụ: 50% đường, ít đá, thêm trân châu...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('productModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="confirmAddToCart()">Thêm Vào Giỏ Hàng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL XEM VÀ IN HÓA ĐƠN CRYSTAL REPORT -->
+  <div class="modal-overlay" id="receiptModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>🧾 Mẫu Crystal Report - Hóa Đơn Thanh Toán</h3>
+        <button class="modal-close" onclick="closeModal('receiptModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="background: #E5E7EB; padding: 16px;">
+        <div class="receipt-container" id="printableReceipt">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('receiptModal')">Đóng</button>
+        <button class="btn btn-primary" onclick="printReceipt()">🖨️ In Hóa Đơn (Crystal Report)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NHẬP KHO -->
+  <div class="modal-overlay" id="importModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>📥 Tạo Phiếu Nhập Kho Nguyên Liệu</h3>
+        <button class="modal-close" onclick="closeModal('importModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Chọn Nguyên Liệu:</label>
+          <select id="importIngredientSelect" class="form-control"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số Lượng Nhập:</label>
+          <input type="number" id="importQty" class="form-control" value="1000" min="1" step="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đơn Giá Nhập (VNĐ):</label>
+          <input type="number" id="importPrice" class="form-control" value="150" min="0" step="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nhà Cung Cấp:</label>
+          <input type="text" id="importSupplier" class="form-control" value="Nhà Cung Cấp Nguyên Liệu Chuẩn">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('importModal')">Hủy</button>
+        <button class="btn btn-primary" onclick="submitImport()">Lưu Phiếu Nhập & Cộng Tồn Kho</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // GLOBAL STATE
+    let currentUser = null;
+    let productsList = [];
+    let currentCategory = '';
+    let cart = [];
+    let selectedModalProduct = null;
+    let selectedSize = null;
+
+    // FORMAT CURRENCY
+    function formatMoney(amount) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+
+    // INIT APP
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadCurrentUser();
+      await loadCategories();
+      await loadProducts();
+      await loadTables();
+      await loadInventory();
+      await loadReportsOverview();
+    });
+
+    // AUTH & ROLE
+    async function loadCurrentUser() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        currentUser = data.user;
+        renderUserBadge();
+        applyRoleRestrictions();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderUserBadge() {
+      const badge = document.getElementById('userBadge');
+      const text = document.getElementById('userNameRole');
+      if (currentUser.role === 'VT01') {
+        badge.className = 'role-badge quanly';
+        text.innerText = `${currentUser.fullName} (Quản Lý - Toàn Quyền)`;
+      } else {
+        badge.className = 'role-badge thungan';
+        text.innerText = `${currentUser.fullName} (Thu Ngân)`;
+      }
+    }
+
+    function applyRoleRestrictions() {
+      const isManager = currentUser.role === 'VT01';
+      document.querySelectorAll('.manager-only').forEach(el => {
+        if (!isManager) {
+          el.style.display = 'none';
+        } else {
+          el.style.display = 'flex';
+        }
+      });
+      // Nếu là thu ngân đang ở tab quản lý thì chuyển về POS
+      if (!isManager) {
+        switchTab('pos');
+      }
+    }
+
+    async function quickSwitchRole() {
+      const target = (currentUser.role === 'VT01') ? 'VT02' : 'VT01';
+      const res = await fetch('/api/auth/switch-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: target })
+      });
+      const data = await res.json();
+      if (data.success) {
+        currentUser = data.user;
+        renderUserBadge();
+        applyRoleRestrictions();
+        alert(`Đã chuyển sang vai trò: ${currentUser.roleName}`);
+      }
+    }
+
+    // TABS
+    function switchTab(tabId) {
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.nav-tab')).find(b => b.getAttribute('onclick')?.includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const targetSec = document.getElementById(`tab-${tabId}`);
+      if (targetSec) targetSec.classList.add('active');
+
+      if (tabId === 'menu') loadMenuTable();
+      if (tabId === 'recipes') loadRecipes();
+      if (tabId === 'inventory') { loadInventory(); loadStockHistory(); }
+      if (tabId === 'reports') loadReportsOverview();
+      if (tabId === 'employees') loadEmployees();
+    }
+
+    // LOAD CATEGORIES & PRODUCTS
+    async function loadCategories() {
+      const res = await fetch('/api/categories');
+      const data = await res.json();
+      const container = document.getElementById('categoryFilter');
+      container.innerHTML = `<button class="cat-btn active" onclick="filterByCategory('')">Tất cả món</button>`;
+      data.data.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'cat-btn';
+        btn.innerText = `${c.HinhAnh || ''} ${c.TenDM}`;
+        btn.onclick = () => filterByCategory(c.MaDM);
+        container.appendChild(btn);
+      });
+    }
+
+    async function loadProducts() {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      productsList = data.data;
+      renderProducts(productsList);
+
+      // Cập nhật dropdown filter cho recipes
+      const sel = document.getElementById('recipeProductFilter');
+      if (sel) {
+        sel.innerHTML = `<option value="">-- Xem tất cả món --</option>`;
+        productsList.forEach(p => {
+          sel.innerHTML += `<option value="${p.MaSP}">${p.TenSP}</option>`;
+        });
+      }
+    }
+
+    function renderProducts(items) {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      if (!items.length) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">Không tìm thấy món phù hợp</div>';
+        return;
+      }
+      items.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => openProductModal(p);
+        card.innerHTML = `
+          <div>
+            <div class="prod-icon">${p.HinhAnh || '☕'}</div>
+            <div class="prod-name">${p.TenSP}</div>
+            <div class="prod-category">${p.TenDM}</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span class="prod-price">từ ${formatMoney(p.minPrice)}</span>
+            <span style="background: var(--primary-light); color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">+ Thêm</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterByCategory(catId) {
+      currentCategory = catId;
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      handleSearch();
+    }
+
+    function handleSearch() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      let filtered = productsList;
+      if (currentCategory) {
+        filtered = filtered.filter(p => p.MaDM === currentCategory);
+      }
+      if (q) {
+        filtered = filtered.filter(p => p.TenSP.toLowerCase().includes(q));
+      }
+      renderProducts(filtered);
+    }
+
+    // MODAL CHỌN SIZE
+    function openProductModal(prod) {
+      selectedModalProduct = prod;
+      document.getElementById('modalProdTitle').innerText = prod.TenSP;
+      document.getElementById('modalProdIcon').innerText = prod.HinhAnh || '☕';
+      document.getElementById('modalProdDesc').innerText = prod.MoTa || 'Hương vị tuyệt hảo!';
+      document.getElementById('modalQty').value = 1;
+      document.getElementById('modalNote').value = '';
+
+      const sizeList = document.getElementById('sizeOptionList');
+      sizeList.innerHTML = '';
+      selectedSize = prod.sizes[0] || null;
+
+      prod.sizes.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn ${idx === 0 ? 'btn-primary' : 'btn-secondary'}`;
+        btn.style.flex = '1';
+        btn.innerText = `${s.TenSize} (${formatMoney(s.GiaBan)})`;
+        btn.onclick = () => {
+          sizeList.querySelectorAll('button').forEach(b => { b.className = 'btn btn-secondary'; });
+          btn.className = 'btn btn-primary';
+          selectedSize = s;
+        };
+        sizeList.appendChild(btn);
+      });
+
+      openModal('productModal');
+    }
+
+    function adjustModalQty(delta) {
+      const inp = document.getElementById('modalQty');
+      let val = parseInt(inp.value) + delta;
+      if (val < 1) val = 1;
+      inp.value = val;
+    }
+
+    function confirmAddToCart() {
+      if (!selectedModalProduct || !selectedSize) return;
+      const qty = parseInt(document.getElementById('modalQty').value) || 1;
+      const note = document.getElementById('modalNote').value.trim();
+
+      const existingIndex = cart.findIndex(c => c.MaSP === selectedModalProduct.MaSP && c.MaSize === selectedSize.MaSize && c.GhiChu === note);
+      if (existingIndex > -1) {
+        cart[existingIndex].SoLuong += qty;
+      } else {
+        cart.push({
+          MaSP: selectedModalProduct.MaSP,
+          TenSP: selectedModalProduct.TenSP,
+          MaSize: selectedSize.MaSize,
+          TenSize: selectedSize.TenSize,
+          DonGia: selectedSize.GiaBan,
+          SoLuong: qty,
+          GhiChu: note
+        });
+      }
+
+      closeModal('productModal');
+      renderCart();
+    }
+
+    // CART OPERATIONS
+    function renderCart() {
+      const container = document.getElementById('cartItems');
+      if (!cart.length) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
+            Chưa có món nào được chọn.<br>Nhấp vào món ở menu bên trái để thêm!
+          </div>
+        `;
+        updateCartSummary();
+        return;
+      }
+
+      container.innerHTML = '';
+      cart.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.TenSP} (${item.TenSize})</div>
+            <div class="cart-item-meta">${item.GhiChu ? '📝 ' + item.GhiChu : ''}</div>
+          </div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
+            <span style="font-weight: bold; font-size: 13px; min-width: 18px; text-align: center;">${item.SoLuong}</span>
+            <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+          </div>
+          <div class="cart-item-price">${formatMoney(item.DonGia * item.SoLuong)}</div>
+          <button class="del-btn" onclick="removeItem(${idx})">&times;</button>
+        `;
+        container.appendChild(row);
+      });
+
+      updateCartSummary();
+    }
+
+    function changeQty(idx, delta) {
+      cart[idx].SoLuong += delta;
+      if (cart[idx].SoLuong <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function removeItem(idx) {
+      cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function clearCart() {
+      if (!cart.length) return;
+      if (confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) {
+        cart = [];
+        renderCart();
+      }
+    }
+
+    function updateCartSummary() {
+      const subTotal = cart.reduce((sum, item) => sum + (item.DonGia * item.SoLuong), 0);
+      const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+      const finalTotal = Math.max(0, subTotal - discount);
+
+      document.getElementById('subTotalText').innerText = formatMoney(subTotal);
+      document.getElementById('finalTotalText').innerText = formatMoney(finalTotal);
+
+      const cashInp = document.getElementById('cashGivenInput');
+      if (parseFloat(cashInp.value) === 0 || parseFloat(cashInp.value) < finalTotal) {
+        cashInp.value = finalTotal;
+      }
+      updateChange();
+    }
+
+    function updateChange() {
+      const subTotal = cart.reduce((sum, item) => sum + (item.DonGia * item.SoLuong), 0);
+      const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+      const finalTotal = Math.max(0, subTotal - discount);
+      const cashGiven = parseFloat(document.getElementById('cashGivenInput').value) || 0;
+      const change = Math.max(0, cashGiven - finalTotal);
+      document.getElementById('changeText').innerText = formatMoney(change);
+    }
+
+    // CHECKOUT VÀ THỰC THI TRIGGER TRỪ KHO
+    async function executeCheckout() {
+      if (!cart.length) {
+        alert('Giỏ hàng đang trống! Vui lòng chọn món trước.');
+        return;
+      }
+
+      const table = document.getElementById('cartTable').value;
+      const payment = document.getElementById('cartPayment').value;
+      const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+      const cashGiven = parseFloat(document.getElementById('cashGivenInput').value) || 0;
+
+      const payload = {
+        items: cart,
+        MaBan: table,
+        PhuongThucTT: payment,
+        GiamGia: discount,
+        TienKhachDua: cashGiven
+      };
+
+      try {
+        const res = await fetch('/api/orders/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+
+        if (!result.success) {
+          // LỖI TRIGGER CẢNH BÁO TỒN KHO THIẾU
+          alert(result.message);
+          return;
+        }
+
+        // THÀNH CÔNG: Đã trừ kho qua Trigger
+        let stockMsg = "✅ " + result.message + "\n\nNguyên liệu đã trừ trong kho:\n";
+        result.deductedIngredients.forEach(ing => {
+          stockMsg += ` • ${ing.name}: trừ ${ing.amount} (Còn lại: ${ing.remain})\n`;
+        });
+        alert(stockMsg);
+
+        // Mở hóa đơn Crystal Report xem & in bill
+        const invId = result.invoiceId;
+        cart = [];
+        renderCart();
+        await openReceiptModal(invId);
+
+        // Reload data
+        loadInventory();
+        loadReportsOverview();
+      } catch (e) {
+        alert('Lỗi kết nối: ' + e.message);
+      }
+    }
+
+    // CRYSTAL REPORT / HÓA ĐƠN
+    async function openReceiptModal(invoiceId) {
+      try {
+        const res = await fetch(`/api/orders/${invoiceId}/receipt`);
+        const result = await res.json();
+        if (!result.success) {
+          alert('Không thể tải hóa đơn');
+          return;
+        }
+
+        const inv = result.data;
+        const store = inv.store;
+
+        let itemsHtml = '';
+        inv.items.forEach((it, i) => {
+          itemsHtml += `
+            <tr>
+              <td>${i + 1}. ${it.TenSP} (${it.TenSize})</td>
+              <td style="text-align: center;">${it.SoLuong}</td>
+              <td style="text-align: right;">${formatMoney(it.DonGia)}</td>
+              <td style="text-align: right;">${formatMoney(it.ThanhTien)}</td>
+            </tr>
+          `;
+        });
+
+        const receiptEl = document.getElementById('printableReceipt');
+        receiptEl.innerHTML = `
+          <div class="receipt-header">
+            <div class="receipt-title">${store.name}</div>
+            <div class="receipt-sub">${store.address}</div>
+            <div class="receipt-sub">Hotline: ${store.phone} | Wifi: ${store.wifi}</div>
+            <div style="font-weight: bold; margin-top: 8px; font-size: 14px;">PHIẾU THANH TOÁN (HÓA ĐƠN)</div>
+          </div>
+
+          <div class="receipt-meta">
+            <div>Số HĐ: <b>${inv.MaHD}</b></div>
+            <div>Thời gian: ${inv.NgayTao}</div>
+            <div>Thu ngân: ${inv.TenThuNgan}</div>
+            <div>Khu vực: ${inv.TenBan || 'Mang về (Takeaway)'}</div>
+            ${inv.TenKhachHang ? `<div>Khách hàng: ${inv.TenKhachHang} (${inv.SDTKhachHang})</div>` : ''}
+          </div>
+
+          <table class="receipt-items">
+            <thead>
+              <tr>
+                <th>Món</th>
+                <th style="text-align: center;">SL</th>
+                <th style="text-align: right;">Đ.Giá</th>
+                <th style="text-align: right;">T.Tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="receipt-summary">
+            <div class="row">
+              <span>Tổng tiền hàng:</span>
+              <span>${formatMoney(inv.TongTienHang)}</span>
+            </div>
+            ${inv.GiamGia > 0 ? `
+              <div class="row" style="color: var(--danger);">
+                <span>Giảm giá / Voucher:</span>
+                <span>-${formatMoney(inv.GiamGia)}</span>
+              </div>
+            ` : ''}
+            <div class="row total-row">
+              <span>TỔNG CỘNG:</span>
+              <span>${formatMoney(inv.TongThanhToan)}</span>
+            </div>
+            <div class="row" style="margin-top: 4px;">
+              <span>Hình thức TT:</span>
+              <span>${inv.PhuongThucTT === 'TienMat' ? 'Tiền mặt' : (inv.PhuongThucTT === 'ChuyenKhoan' ? 'Chuyển khoản QR' : 'Thẻ')}</span>
+            </div>
+            <div class="row">
+              <span>Tiền khách đưa:</span>
+              <span>${formatMoney(inv.TienKhachDua)}</span>
+            </div>
+            <div class="row">
+              <span>Tiền thối lại:</span>
+              <span>${formatMoney(inv.TienThoiLai)}</span>
+            </div>
+          </div>
+
+          <div class="receipt-qr">
+            <div style="font-size: 10px; margin-bottom: 4px; color: #555;">MÃ THANH TOÁN VIETQR (NAPAS 247)</div>
+            <svg width="120" height="120" viewBox="0 0 100 100" style="margin: 0 auto; display: block; background: #fff; padding: 4px; border: 1px solid #ccc;">
+              <rect x="5" y="5" width="25" height="25" fill="#000"/>
+              <rect x="10" y="10" width="15" height="15" fill="#fff"/>
+              <rect x="13" y="13" width="9" height="9" fill="#000"/>
+              <rect x="70" y="5" width="25" height="25" fill="#000"/>
+              <rect x="75" y="10" width="15" height="15" fill="#fff"/>
+              <rect x="78" y="13" width="9" height="9" fill="#000"/>
+              <rect x="5" y="70" width="25" height="25" fill="#000"/>
+              <rect x="10" y="75" width="15" height="15" fill="#fff"/>
+              <rect x="13" y="78" width="9" height="9" fill="#000"/>
+              <rect x="35" y="35" width="30" height="30" fill="#964B00"/>
+              <text x="50" y="54" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">UIT</text>
+              <rect x="35" y="10" width="10" height="10" fill="#000"/>
+              <rect x="55" y="15" width="8" height="8" fill="#000"/>
+              <rect x="15" y="45" width="12" height="8" fill="#000"/>
+              <rect x="75" y="50" width="15" height="8" fill="#000"/>
+              <rect x="45" y="75" width="20" height="15" fill="#000"/>
+            </svg>
+          </div>
+
+          <div class="receipt-footer">
+            <div style="font-style: italic;">"${store.slogan}"</div>
+            <div style="margin-top: 4px;">CẢM ƠN QUÝ KHÁCH & HẸN GẶP LẠI!</div>
+            <div style="font-size: 9px; color: #777; margin-top: 2px;">Báo cáo Crystal Report IE103 Quản Lý Thông Tin</div>
+          </div>
+        `;
+
+        openModal('receiptModal');
+      } catch (e) {
+        alert('Lỗi: ' + e.message);
+      }
+    }
+
+    function printReceipt() {
+      window.print();
+    }
+
+    // LOAD OTHER TABS DATA
+    async function loadTables() {
+      const res = await fetch('/api/tables');
+      const data = await res.json();
+      const sel = document.getElementById('cartTable');
+      sel.innerHTML = `<option value="">Mang về (Takeaway)</option>`;
+      data.data.forEach(t => {
+        sel.innerHTML += `<option value="${t.MaBan}">${t.TenBan} (${t.KhuVuc || ''})</option>`;
+      });
+    }
+
+    async function loadMenuTable() {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      const tbody = document.querySelector('#menuTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(p => {
+        const sS = p.sizes.find(s => s.MaSize === 'S');
+        const sM = p.sizes.find(s => s.MaSize === 'M');
+        const sL = p.sizes.find(s => s.MaSize === 'L');
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><b>${p.MaSP}</b></td>
+          <td>${p.HinhAnh || ''} ${p.TenSP}</td>
+          <td>${p.TenDM}</td>
+          <td>${sS ? formatMoney(sS.GiaBan) : '-'}</td>
+          <td>${sM ? formatMoney(sM.GiaBan) : '-'}</td>
+          <td>${sL ? formatMoney(sL.GiaBan) : '-'}</td>
+          <td><span class="badge success">Đang bán</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function loadRecipes() {
+      const prodId = document.getElementById('recipeProductFilter')?.value || '';
+      const url = prodId ? `/api/recipes?productId=${prodId}` : '/api/recipes';
+      const res = await fetch(url);
+      const data = await res.json();
+      const tbody = document.querySelector('#recipesTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(r => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><b>${r.TenSP}</b></td>
+          <td><span class="badge warning">${r.TenSize}</span></td>
+          <td>${r.TenNL}</td>
+          <td><b>${r.SoLuongCan} ${r.DonViTinh}</b></td>
+          <td>${r.GhiChu || '-'}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function loadInventory() {
+      const res = await fetch('/api/ingredients');
+      const data = await res.json();
+      const tbody = document.querySelector('#inventoryTable tbody');
+      tbody.innerHTML = '';
+
+      let lowCount = 0;
+      data.data.forEach(ing => {
+        const isLow = ing.SoLuongTon <= ing.NguongToiThieu;
+        if (isLow) lowCount++;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><b>${ing.MaNL}</b></td>
+          <td>${ing.TenNL}</td>
+          <td>${ing.DonViTinh}</td>
+          <td><b style="color: ${isLow ? 'var(--danger)' : '#1E293B'}; font-size: 15px;">${ing.SoLuongTon}</b></td>
+          <td>${ing.NguongToiThieu}</td>
+          <td>${formatMoney(ing.DonGiaNhapBinhQuan)}</td>
+          <td><span class="badge ${isLow ? 'danger' : 'success'}">${ing.TrangThaiKho}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('statTotalIngredients').innerText = data.data.length;
+      document.getElementById('statLowStock').innerText = lowCount;
+
+      // Update dropdown import
+      const sel = document.getElementById('importIngredientSelect');
+      if (sel) {
+        sel.innerHTML = '';
+        data.data.forEach(i => {
+          sel.innerHTML += `<option value="${i.MaNL}">${i.TenNL} (Hiện có: ${i.SoLuongTon} ${i.DonViTinh})</option>`;
+        });
+      }
+    }
+
+    async function loadStockHistory() {
+      const res = await fetch('/api/reports/stock-history');
+      const data = await res.json();
+      const tbody = document.querySelector('#stockHistoryTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(l => {
+        const row = document.createElement('tr');
+        const isSub = l.SoLuongThayDoi < 0;
+        row.innerHTML = `
+          <td>${l.MaLS}</td>
+          <td>${l.NgayThucHien}</td>
+          <td><b>${l.TenNL}</b></td>
+          <td><span class="badge ${isSub ? 'warning' : 'success'}">${l.LoaiGiaoDich}</span></td>
+          <td style="color: ${isSub ? 'var(--danger)' : 'var(--success)'}; font-weight: bold;">
+            ${isSub ? '' : '+'}${l.SoLuongThayDoi} ${l.DonViTinh}
+          </td>
+          <td>${l.SoLuongTonSauDo} ${l.DonViTinh}</td>
+          <td>${l.MaChungTu || '-'}</td>
+          <td>${l.GhiChu || '-'}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // NHẬP KHO MODAL
+    function openImportModal() {
+      openModal('importModal');
+    }
+
+    async function submitImport() {
+      const maNL = document.getElementById('importIngredientSelect').value;
+      const qty = parseFloat(document.getElementById('importQty').value) || 0;
+      const price = parseFloat(document.getElementById('importPrice').value) || 0;
+      const supplier = document.getElementById('importSupplier').value;
+
+      if (qty <= 0) {
+        alert('Số lượng nhập phải lớn hơn 0');
+        return;
+      }
+
+      const payload = {
+        items: [{ MaNL: maNL, SoLuong: qty, DonGia: price }],
+        NhaCungCap: supplier,
+        GhiChu: 'Nhập bổ sung kho'
+      };
+
+      const res = await fetch('/api/inventory/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message);
+        closeModal('importModal');
+        loadInventory();
+        loadStockHistory();
+      } else {
+        alert('Lỗi: ' + data.message);
+      }
+    }
+
+    // BÁO CÁO & FUNCTIONS DOANH THU
+    async function loadReportsOverview() {
+      // 1. Doanh thu hôm nay
+      const resDay = await fetch('/api/reports/revenue/by-day');
+      const dataDay = await resDay.json();
+      document.getElementById('statTodayRevenue').innerText = formatMoney(dataDay.revenue);
+      document.getElementById('statTodayCount').innerText = `${dataDay.orderCount} hóa đơn đã thanh toán`;
+
+      // 2. Doanh thu tháng này
+      const resMonth = await fetch('/api/reports/revenue/by-month');
+      const dataMonth = await resMonth.json();
+      document.getElementById('statMonthRevenue').innerText = formatMoney(dataMonth.revenue);
+      document.getElementById('statMonthCount').innerText = `Tháng ${dataMonth.month}/${dataMonth.year} (${dataMonth.orderCount} đơn)`;
+
+      // 3. Render danh sách hóa đơn
+      const tbody = document.querySelector('#invoicesTable tbody');
+      if (tbody) {
+        tbody.innerHTML = '';
+        dataDay.invoices.forEach(inv => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><b>${inv.MaHD}</b></td>
+            <td>${inv.NgayTao}</td>
+            <td>${inv.TenBan || 'Mang về'}</td>
+            <td>${inv.ThuNgan}</td>
+            <td>${inv.PhuongThucTT}</td>
+            <td><b>${formatMoney(inv.TongThanhToan)}</b></td>
+            <td>
+              <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="openReceiptModal('${inv.MaHD}')">
+                🧾 In Crystal Report
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+    }
+
+    async function queryRevenueByDay() {
+      const dt = document.getElementById('queryDateInput').value;
+      const res = await fetch(`/api/reports/revenue/by-day?date=${dt}`);
+      const data = await res.json();
+      document.getElementById('dayQueryResult').innerText = `👉 Kết quả hàm fn_TinhDoanhThuTheoNgay('${dt}'): ${formatMoney(data.revenue)} (${data.orderCount} hóa đơn)`;
+    }
+
+    async function queryRevenueByMonth() {
+      const m = document.getElementById('queryMonthSelect').value;
+      const y = document.getElementById('queryYearSelect').value;
+      const res = await fetch(`/api/reports/revenue/by-month?month=${m}&year=${y}`);
+      const data = await res.json();
+      document.getElementById('monthQueryResult').innerText = `👉 Kết quả hàm fn_TinhDoanhThuTheoThang(${m}, ${y}): ${formatMoney(data.revenue)} (${data.orderCount} hóa đơn)`;
+    }
+
+    // NHÂN VIÊN
+    async function loadEmployees() {
+      const res = await fetch('/api/employees');
+      const data = await res.json();
+      const tbody = document.querySelector('#employeeTable tbody');
+      tbody.innerHTML = '';
+      data.data.forEach(e => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><b>${e.MaNV}</b></td>
+          <td>${e.HoTen}</td>
+          <td>${e.TenDangNhap}</td>
+          <td>${e.SoDienThoai || '-'}</td>
+          <td>${e.Email || '-'}</td>
+          <td><span class="badge ${e.MaVaiTro === 'VT01' ? 'warning' : 'success'}">${e.TenVaiTro}</span></td>
+          <td><span class="badge success">${e.TrangThai}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // MODAL HELPERS
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  </script>
+</body>
+</html>

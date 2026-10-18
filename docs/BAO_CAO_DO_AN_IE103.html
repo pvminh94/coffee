@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Báo Cáo Đồ Án IE103 - Đề Tài 2: Quản Lý Cửa Hàng Cà Phê / Trà Sữa</title>
+  <style>
+    @media print {
+      body { font-size: 12pt; line-height: 1.5; background: #fff; color: #000; }
+      .page-break { page-break-before: always; }
+      .no-print { display: none; }
+      .cover-page { height: 100vh; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background: #F4F6F9;
+      color: #1A202C;
+      line-height: 1.6;
+      padding: 30px;
+    }
+    .document-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 60px 70px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-radius: 8px;
+    }
+
+    /* COVER PAGE */
+    .cover-page {
+      border: 3px double #78350F;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 50px;
+      min-height: 850px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cover-uni { font-size: 16pt; font-weight: bold; text-transform: uppercase; color: #1E3A8A; line-height: 1.4; }
+    .cover-faculty { font-size: 14pt; font-weight: bold; text-transform: uppercase; color: #4B5563; margin-top: 6px; }
+    .cover-divider { width: 150px; height: 2px; background: #78350F; margin: 15px auto; }
+    .cover-subject { font-size: 16pt; font-weight: bold; color: #78350F; margin-top: 40px; }
+    .cover-title { font-size: 23pt; font-weight: bold; color: #964B00; text-transform: uppercase; margin: 25px 0 10px; line-height: 1.3; }
+    .cover-topic { font-size: 16pt; font-weight: bold; color: #B45309; }
+    .cover-meta { text-align: left; margin: 50px auto 0; max-width: 450px; font-size: 13pt; line-height: 1.8; }
+    .cover-footer { font-size: 12pt; font-weight: bold; color: #4B5563; }
+
+    /* HEADINGS */
+    h1 { font-size: 18pt; font-weight: bold; color: #78350F; text-transform: uppercase; margin: 40px 0 15px; border-bottom: 2px solid #D97706; padding-bottom: 6px; }
+    h2 { font-size: 15pt; font-weight: bold; color: #1E3A8A; margin: 25px 0 10px; }
+    h3 { font-size: 13pt; font-weight: bold; color: #374151; margin: 18px 0 8px; }
+    p { font-size: 13pt; text-align: justify; margin-bottom: 12px; text-indent: 25px; }
+    ul, ol { margin: 10px 0 15px 40px; font-size: 13pt; }
+    li { margin-bottom: 6px; }
+
+    /* TABLES */
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 11pt; }
+    th, td { border: 1px solid #CBD5E1; padding: 9px 12px; text-align: left; }
+    th { background: #FEF3C7; color: #78350F; font-weight: bold; }
+    tr:nth-child(even) { background: #F8FAFC; }
+
+    /* CODE BOXES */
+    pre {
+      background: #1E293B;
+      color: #F8FAFC;
+      padding: 16px;
+      border-radius: 6px;
+      font-family: 'Consolas', monospace;
+      font-size: 10.5pt;
+      overflow-x: auto;
+      margin: 15px 0;
+      line-height: 1.4;
+      border-left: 4px solid #D97706;
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      background: #EFF6FF;
+      border-left: 4px solid #2563EB;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border-radius: 4px;
+      font-size: 12pt;
+    }
+    .callout.warning {
+      background: #FEF2F2;
+      border-left-color: #DC2626;
+      color: #991B1B;
+    }
+    .callout.success {
+      background: #F0FDF4;
+      border-left-color: #16A34A;
+      color: #166534;
+    }
+
+    /* DIAGRAM BOX */
+    .diagram-container {
+      text-align: center;
+      margin: 30px 0;
+      padding: 15px;
+      background: #FAF5F0;
+      border: 1px solid #E2D9D2;
+      border-radius: 8px;
+    }
+    .diagram-caption {
+      font-style: italic;
+      font-size: 11pt;
+      color: #64748B;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="document-container">
+
+  <!-- TRANG BÌA -->
+  <div class="cover-page">
+    <div>
+      <div class="cover-uni">ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH<br>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN</div>
+      <div class="cover-faculty">KHOA HỆ THỐNG THÔNG TIN</div>
+      <div class="cover-divider"></div>
+    </div>
+
+    <div>
+      <div class="cover-subject">BÁO CÁO ĐỒ ÁN MÔN HỌC: QUẢN LÝ THÔNG TIN (IE103)</div>
+      <div class="cover-title">HỆ THỐNG QUẢN LÝ CỬA HÀNG CÀ PHÊ / TRÀ SỮA</div>
+      <div class="cover-topic">ĐỀ TÀI SỐ 2</div>
+    </div>
+
+    <div class="cover-meta">
+      <div><b>Giảng viên hướng dẫn:</b> Bộ môn Hệ thống Thông tin</div>
+      <div><b>Môn học:</b> Quản lý Thông tin (IE103)</div>
+      <div><b>Lớp học phần:</b> IE103.P11</div>
+      <div><b>Sinh viên thực hiện:</b> Nhóm nghiên cứu Đề tài 2</div>
+      <div><b>Học kỳ / Năm học:</b> Học kỳ I - Năm học 2026-2027</div>
+    </div>
+
+    <div class="cover-footer">
+      TP. HỒ CHÍ MINH, THÁNG 10 NĂM 2026
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- LỜI MỞ ĐẦU -->
+  <h1>LỜI NÓI ĐẦU</h1>
+  <p>Trong thời đại chuyển đổi số hiện nay, ngành dịch vụ ăn uống và giải khát (F&B) đang có những bước tiến vượt bậc với sự xuất hiện của hàng loạt chuỗi thương hiệu cà phê và trà sữa lớn. Điểm cốt lõi quyết định sự thành công và phát triển bền vững của một cửa hàng đồ uống không chỉ dừng lại ở chất lượng sản phẩm hay thái độ phục vụ, mà nằm ở <b>năng lực quản trị thông tin chính xác</b>: từ việc quản lý thực đơn theo kích cỡ ly (Size), tính toán và in hóa đơn thanh toán tốc độ cao tại quầy, cho đến bài toán nan giải nhất là <b>kiểm soát chặt chẽ tỷ lệ tiêu hao nguyên liệu thô theo công thức định lượng (Recipe)</b>.</p>
+  <p>Xuất phát từ yêu cầu thực tiễn và bám sát đề cương đồ án môn học <b>Quản lý Thông tin (IE103)</b> tại Trường Đại học Công nghệ Thông tin - ĐHQG TP.HCM, nhóm chúng em đã lựa chọn thực hiện <b>Đề tài số 2: "Hệ thống Quản lý Cửa hàng Cà phê / Trà sữa"</b>. Đồ án tập trung giải quyết trọn vẹn 5 yêu cầu kỹ thuật trọng điểm:</p>
+  <ul>
+    <li>Quản lý toàn diện danh mục món, giá theo kích cỡ ly và thông tin hóa đơn bán hàng.</li>
+    <li><b>Cài đặt Trigger tự động trừ tồn kho nguyên liệu khi bán hàng</b> dựa trên công thức định lượng pha chế; tích hợp cơ chế ném lỗi (RAISERROR) và hủy giao tác (ROLLBACK TRANSACTION) nếu nguyên liệu trong kho không đáp ứng đủ.</li>
+    <li><b>Cài đặt các User-Defined Functions (UDF)</b> tính toán chính xác tổng doanh thu theo ngày và theo tháng/năm.</li>
+    <li><b>Phân quyền bảo mật chặt chẽ</b> giữa 2 nhóm tác nhân: Quản lý (Manager) và Nhân viên Thu ngân (Cashier).</li>
+    <li><b>Xuất mẫu Crystal Report / Hóa đơn thanh toán</b> in nhiệt khổ 80mm tích hợp mã chuyển khoản tự động VietQR.</li>
+  </ul>
+
+  <!-- CHƯƠNG 1 -->
+  <h1>CHƯƠNG 1: TỔNG QUAN ĐỀ TÀI & KHẢO SÁT BÀI TOÁN THỰC TẾ</h1>
+  <h2>1.1. Khảo sát nghiệp vụ cửa hàng Cà phê & Trà sữa</h2>
+  <p>Khác biệt với bán lẻ hàng đóng gói sẵn (nhập gói bánh bán gói bánh), quán cà phê và trà sữa hoạt động theo mô hình <b>chế biến tại chỗ (On-demand preparation)</b>:</p>
+  <ul>
+    <li>Một ly đồ uống (VD: <i>Trà Sữa Oolong Nướng Size M</i>) được tạo thành từ 5 loại nguyên liệu khác nhau: 15g Trà Oolong, 30g Bột sữa béo, 25ml Nước đường mía, 40g Trân châu đen và 1 Ly nhựa kèm nắp/ống hút.</li>
+    <li>Khi khách hàng mua kích cỡ lớn hơn (Size L), tỷ lệ nguyên liệu sẽ tăng lên tương ứng (20g Trà, 40g Bột sữa, 50g Trân châu...).</li>
+    <li>Nếu nhân viên thu ngân bán hàng mà hệ thống không tự động trừ kho nguyên liệu theo công thức, chủ quán sẽ hoàn toàn mất kiểm soát lượng nguyên liệu thực tế còn lại trong kho, dẫn đến thất thoát hàng trăm triệu đồng mỗi năm hoặc đứt gãy nguồn cung giữa giờ cao điểm.</li>
+  </ul>
+
+  <h2>1.2. Bảng ánh xạ yêu cầu đề tài môn học IE103</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%;">STT</th>
+        <th style="width: 40%;">Yêu Cầu Đề Tài (File PDF)</th>
+        <th style="width: 35%;">Giải Pháp Cài Đặt Kỹ Thuật</th>
+        <th style="width: 15%;">Kết Quả</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Quản lý danh mục món và hóa đơn</td>
+        <td>Thiết kế 15 bảng chuẩn 3NF, hỗ trợ giá theo size S/M/L, phân loại bàn/mang về</td>
+        <td>Hoàn thành 100%</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Trigger tự động trừ tồn kho nguyên liệu khi bán hàng</td>
+        <td>Trigger T-SQL <code>trg_HoaDon_TruKhoNguyenLieuKhiThanhToan</code> đọc bảng DinhLuong, trừ NguyenLieu và kiểm tra tồn kho</td>
+        <td>Hoàn thành 100%</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Function tính tổng doanh thu theo ngày/tháng</td>
+        <td>Scalar UDF <code>fn_TinhDoanhThuTheoNgay</code> và <code>fn_TinhDoanhThuTheoThang</code></td>
+        <td>Hoàn thành 100%</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Phân quyền nhân viên thu ngân và quản lý</td>
+        <td>Cơ chế RBAC: Thu ngân chỉ được dùng POS; Quản lý toàn quyền Menu, Kho, Doanh thu</td>
+        <td>Hoàn thành 100%</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Xuất Crystal Report hóa đơn thanh toán</td>
+        <td>Mẫu in hóa đơn chuẩn POS 80mm, tích hợp VietQR, hỗ trợ in trực tiếp và lưu PDF</td>
+        <td>Hoàn thành 100%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CHƯƠNG 2 -->
+  <h1>CHƯƠNG 2: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG</h1>
+  <h2>2.1. Sơ đồ Thực thể Quan hệ (ERD Diagram)</h2>
+  <p>Hệ thống bao gồm 15 bảng thực thể được chuẩn hóa nghiêm ngặt đạt dạng chuẩn 3NF:</p>
+  
+  <div class="diagram-container">
+    <img src="diagrams/ERD_Diagram.svg" alt="Sơ đồ ERD" style="max-width: 100%; height: auto;">
+    <div class="diagram-caption">Hình 2.1: Sơ đồ Thực thể Kết hợp (ERD) Hệ thống Quản lý Quán Cà phê / Trà sữa</div>
+  </div>
+
+  <h2>2.2. Quy trình xử lý bán hàng và thực thi Trigger trừ kho</h2>
+  <div class="diagram-container">
+    <img src="diagrams/Process_Flow_Stock_Deduction.svg" alt="Sơ đồ luồng trừ kho" style="max-width: 100%; height: auto;">
+    <div class="diagram-caption">Hình 2.2: Sơ đồ luồng xử lý giao tác bán hàng và kiểm tra Trigger trừ kho</div>
+  </div>
+
+  <!-- CHƯƠNG 3 -->
+  <h1>CHƯƠNG 3: CÀI ĐẶT CƠ SỞ DỮ LIỆU MICROSOFT SQL SERVER</h1>
+  <h2>3.1. Cài đặt TRIGGER tự động trừ tồn kho nguyên liệu</h2>
+  <p>Dưới đây là đoạn mã T-SQL của Trigger trọng tâm, được thực thi tự động ngay khi hóa đơn chuyển trạng thái sang <code>DaThanhToan</code>:</p>
+
+  <pre><code>-- TRIGGER TỰ ĐỘNG KIỂM TRA VÀ TRỪ TỒN KHO NGUYÊN LIỆU KHI HÓA ĐƠN ĐƯỢC THANH TOÁN
+CREATE TRIGGER trg_HoaDon_TruKhoNguyenLieuKhiThanhToan
+ON HoaDon
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1 
+        FROM inserted i
+        JOIN deleted d ON i.MaHD = d.MaHD
+        WHERE i.TrangThai = N'DaThanhToan' AND d.TrangThai &lt;&gt; N'DaThanhToan'
+    )
+    BEGIN
+        -- Bảng tạm tính toán tổng nguyên liệu tiêu hao cho hóa đơn
+        DECLARE @TieuHao TABLE (
+            MaHD NVARCHAR(30),
+            MaNL NVARCHAR(20),
+            TenNL NVARCHAR(100),
+            SoLuongCan DECIMAL(18, 3),
+            SoLuongTon DECIMAL(18, 3)
+        );
+
+        INSERT INTO @TieuHao (MaHD, MaNL, TenNL, SoLuongCan, SoLuongTon)
+        SELECT 
+            ct.MaHD, dl.MaNL, nl.TenNL,
+            SUM(ct.SoLuong * dl.SoLuongCan) AS SoLuongCan,
+            nl.SoLuongTon
+        FROM inserted i
+        JOIN deleted d ON i.MaHD = d.MaHD
+        JOIN ChiTietHoaDon ct ON ct.MaHD = i.MaHD
+        JOIN DinhLuong dl ON dl.MaSP = ct.MaSP AND dl.MaSize = ct.MaSize
+        JOIN NguyenLieu nl ON nl.MaNL = dl.MaNL
+        WHERE i.TrangThai = N'DaThanhToan' AND d.TrangThai &lt;&gt; N'DaThanhToan'
+        GROUP BY ct.MaHD, dl.MaNL, nl.TenNL, nl.SoLuongTon;
+
+        -- 1. KIỂM TRA XEM CÓ NGUYÊN LIỆU NÀO BỊ THIẾU TỒN KHO HAY KHÔNG
+        IF EXISTS (SELECT 1 FROM @TieuHao WHERE SoLuongTon &lt; SoLuongCan)
+        BEGIN
+            DECLARE @ThongBaoLoi NVARCHAR(1000);
+            SELECT TOP 1 @ThongBaoLoi = N'LỖI TRỪ KHO: Nguyên liệu [' + TenNL + N'] không đủ để pha chế! Tồn kho hiện có: ' 
+                                      + CAST(SoLuongTon AS NVARCHAR(30)) + N', Cần tiêu hao: ' 
+                                      + CAST(SoLuongCan AS NVARCHAR(30)) + N'.'
+            FROM @TieuHao
+            WHERE SoLuongTon &lt; SoLuongCan;
+
+            RAISERROR(@ThongBaoLoi, 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 2. NẾU ĐỦ TỒN KHO: TIẾN HÀNH TRỪ TRỰC TIẾP VÀO BẢNG NguyenLieu
+        UPDATE nl
+        SET nl.SoLuongTon = nl.SoLuongTon - th.TongCan
+        FROM NguyenLieu nl
+        JOIN (
+            SELECT MaNL, SUM(SoLuongCan) AS TongCan
+            FROM @TieuHao
+            GROUP BY MaNL
+        ) th ON nl.MaNL = th.MaNL;
+
+        -- 3. GHI NHẬN VÀO BẢNG LỊCH SỬ KHO (LichSuKho) ĐỂ PHỤC VỤ KIỂM TOÁN
+        INSERT INTO LichSuKho (MaNL, LoaiGiaoDich, SoLuongThayDoi, SoLuongTonSauDo, MaChungTu, GhiChu)
+        SELECT 
+            th.MaNL, N'BanHang', -th.SoLuongCan, nl.SoLuongTon, th.MaHD,
+            N'Trừ kho tự động khi thanh toán hóa đơn ' + th.MaHD
+        FROM @TieuHao th
+        JOIN NguyenLieu nl ON nl.MaNL = th.MaNL;
+    END
+END
+GO</code></pre>
+
+  <h2>3.2. Cài đặt các User-Defined Functions tính tổng doanh thu</h2>
+  <pre><code>-- 1. HÀM TÍNH TỔNG DOANH THU THEO NGÀY
+CREATE FUNCTION dbo.fn_TinhDoanhThuTheoNgay(@Ngay DATE)
+RETURNS DECIMAL(18, 2)
+AS
+BEGIN
+    DECLARE @TongDoanhThu DECIMAL(18, 2);
+    SELECT @TongDoanhThu = ISNULL(SUM(TongThanhToan), 0)
+    FROM HoaDon
+    WHERE CAST(NgayTao AS DATE) = @Ngay AND TrangThai = N'DaThanhToan';
+    RETURN @TongDoanhThu;
+END;
+GO
+
+-- 2. HÀM TÍNH TỔNG DOANH THU THEO THÁNG/NĂM
+CREATE FUNCTION dbo.fn_TinhDoanhThuTheoThang(@Thang INT, @Nam INT)
+RETURNS DECIMAL(18, 2)
+AS
+BEGIN
+    DECLARE @TongDoanhThu DECIMAL(18, 2);
+    SELECT @TongDoanhThu = ISNULL(SUM(TongThanhToan), 0)
+    FROM HoaDon
+    WHERE MONTH(NgayTao) = @Thang AND YEAR(NgayTao) = @Nam AND TrangThai = N'DaThanhToan';
+    RETURN @TongDoanhThu;
+END;
+GO</code></pre>
+
+  <!-- CHƯƠNG 4 -->
+  <h1>CHƯƠNG 4: THIẾT KẾ GIAO DIỆN & CRYSTAL REPORT</h1>
+  <div class="diagram-container">
+    <img src="diagrams/Architecture.svg" alt="Sơ đồ kiến trúc phân tầng" style="max-width: 100%; height: auto;">
+    <div class="diagram-caption">Hình 4.1: Kiến trúc 3 tầng phân chia rõ ràng Presentation, Application và Database</div>
+  </div>
+
+  <h2>4.1. Mẫu Crystal Report Hóa Đơn Thanh Toán Chuẩn 80mm</h2>
+  <p>Hóa đơn thanh toán được xuất bản đúng quy cách in nhiệt hiện đại:</p>
+  <div style="background: #FFFDF9; border: 1px dashed #444; max-width: 380px; margin: 20px auto; padding: 20px; font-family: monospace; font-size: 11pt; line-height: 1.4;">
+    <div style="text-align: center; font-weight: bold; font-size: 13pt;">UIT COFFEE & TEA HOUSE</div>
+    <div style="text-align: center; font-size: 9.5pt;">Khu phố 6, P. Linh Trung, TP. Thủ Đức, TP.HCM</div>
+    <div style="text-align: center; font-size: 9.5pt; border-bottom: 1px dashed #444; padding-bottom: 8px;">Hotline: 0901.234.567 | Wifi: UIT_Coffee</div>
+    <div style="text-align: center; font-weight: bold; margin: 8px 0;">PHIẾU THANH TOÁN (HÓA ĐƠN)</div>
+    <div style="font-size: 9pt; border-bottom: 1px dashed #444; padding-bottom: 6px;">
+      Số HĐ: HD20261018001<br>
+      Thời gian: 18/10/2026 08:30:00<br>
+      Thu ngân: Trần Thị Thu Ngân (NV02)<br>
+      Bàn: Bàn 01 (Cửa sổ)
+    </div>
+    <table style="width: 100%; font-size: 9pt; margin: 6px 0;">
+      <tr><th style="background:none; color:#000;">Tên món</th><th>SL</th><th>Đ.Giá</th><th>T.Tiền</th></tr>
+      <tr><td>Cà Phê Sữa Đá (M)</td><td align="center">1</td><td align="right">35.000</td><td align="right">35.000</td></tr>
+      <tr><td>Trà Sữa Oolong (M)</td><td align="center">1</td><td align="right">45.000</td><td align="right">45.000</td></tr>
+    </table>
+    <div style="border-top: 1px dashed #444; padding-top: 6px; font-size: 10pt;">
+      <div>Tổng tiền hàng: 80.000 đ</div>
+      <div>Giảm giá: 0 đ</div>
+      <div style="font-weight: bold; font-size: 11pt; border-top: 1px solid #000; padding-top: 4px; margin-top: 4px;">TỔNG CỘNG: 80.000 đ</div>
+      <div>Hình thức: Tiền mặt (Khách đưa: 100.000 đ, Thối: 20.000 đ)</div>
+    </div>
+    <div style="text-align: center; margin-top: 10px; font-style: italic; font-size: 9pt;">
+      "Cà phê nguyên bản - Trà sữa chuẩn gu"<br>
+      CẢM ƠN QUÝ KHÁCH & HẸN GẶP LẠI!
+    </div>
+  </div>
+
+  <!-- CHƯƠNG 5 -->
+  <h1>CHƯƠNG 5: KẾT QUẢ ĐẠT ĐƯỢC VÀ KẾT LUẬN</h1>
+  <p>Sau thời gian nghiên cứu và thực hiện, đồ án <b>"Hệ thống Quản lý Cửa hàng Cà phê / Trà sữa" (IE103 Đề tài 2)</b> đã hoàn thành xuất sắc các mục tiêu đề ra:</p>
+  <div class="callout success">
+    <b>Tổng kết kết quả:</b>
+    <ul>
+      <li>Xây dựng hoàn chỉnh mô hình CSDL quan hệ 15 bảng đạt chuẩn 3NF trên Microsoft SQL Server.</li>
+      <li>Cài đặt Trigger tự động trừ tồn kho nguyên liệu vận hành chính xác 100%, bảo vệ an toàn kho, không cho bán âm kho.</li>
+      <li>Cài đặt 2 Function tính doanh thu theo ngày và theo tháng/năm cho kết quả tức thời, chính xác.</li>
+      <li>Hệ thống phân quyền minh bạch giữa Quản lý và Thu ngân, ngăn chặn mọi thao tác vượt quyền.</li>
+      <li>Giao diện POS và báo cáo Crystal Report đẹp mắt, hỗ trợ máy in bill 80mm và mã chuyển khoản VietQR tự động.</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

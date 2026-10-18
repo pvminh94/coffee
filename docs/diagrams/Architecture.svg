@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #4A2810; font-size: 22px; }
+      .layer-title { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #1E293B; font-size: 16px; }
+      .box-title { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #fff; font-size: 13px; }
+      .box-desc { font-family: 'Segoe UI', Arial, sans-serif; fill: #F1F5F9; font-size: 11px; }
+    </style>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#F8FAFC" />
+
+  <text x="40" y="40" class="title">KIẾN TRÚC PHÂN TẦNG HỆ THỐNG QUẢN LÝ CÀ PHÊ / TRÀ SỮA</text>
+  <text x="40" y="65" font-family="'Segoe UI', Arial" font-size="13px" fill="#64748B">3-Tier Architecture &amp; Database-Driven Logic (IE103 UIT)</text>
+
+  <!-- LAYER 1: CLIENT PRESENTATION (x=40, y=90) -->
+  <rect x="40" y="90" width="920" height="130" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="2"/>
+  <text x="60" y="120" class="layer-title">TẦNG TRÌNH DIỄN (PRESENTATION LAYER - GIAO DIỆN PHÂN QUYỀN)</text>
+  
+  <g transform="translate(60, 135)" filter="url(#shadow2)">
+    <rect width="260" height="65" rx="6" fill="#B45309"/>
+    <text x="15" y="25" class="box-title">🛒 Màn hình POS Bán Hàng</text>
+    <text x="15" y="45" class="box-desc">Dành cho Thu Ngân: Chọn món, Size, Bàn, In Bill</text>
+  </g>
+
+  <g transform="translate(360, 135)" filter="url(#shadow2)">
+    <rect width="270" height="65" rx="6" fill="#78350F"/>
+    <text x="15" y="25" class="box-title">⚖️ Màn hình Quản Trị Kho &amp; Recipe</text>
+    <text x="15" y="45" class="box-desc">Dành cho Quản Lý: Định lượng nguyên liệu, Nhập kho</text>
+  </g>
+
+  <g transform="translate(660, 135)" filter="url(#shadow2)">
+    <rect width="270" height="65" rx="6" fill="#1E3A8A"/>
+    <text x="15" y="25" class="box-title">🧾 Crystal Report &amp; Analytics</text>
+    <text x="15" y="45" class="box-desc">Hóa đơn chuẩn nhiệt 80mm &amp; Báo cáo doanh thu</text>
+  </g>
+
+  <!-- LAYER 2: APPLICATION BACKEND (x=40, y=250) -->
+  <rect x="40" y="250" width="920" height="140" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+  <text x="60" y="280" class="layer-title">TẦNG DỊCH VỤ &amp; ĐIỀU PHỐI (APPLICATION / BUSINESS LOGIC LAYER)</text>
+
+  <g transform="translate(60, 295)" filter="url(#shadow2)">
+    <rect width="200" height="75" rx="6" fill="#2563EB"/>
+    <text x="15" y="25" class="box-title">🔐 Phân Quyền RBAC</text>
+    <text x="15" y="45" class="box-desc">Quản lý phiên đăng nhập,</text>
+    <text x="15" y="60" class="box-desc">Kiểm soát quyền Quản Lý / Thu Ngân</text>
+  </g>
+
+  <g transform="translate(290, 295)" filter="url(#shadow2)">
+    <rect width="230" height="75" rx="6" fill="#0D9488"/>
+    <text x="15" y="25" class="box-title">📦 Order &amp; Checkout Controller</text>
+    <text x="15" y="45" class="box-desc">Xử lý giỏ hàng, giao tác bán,</text>
+    <text x="15" y="60" class="box-desc">kích hoạt kiểm tra định lượng</text>
+  </g>
+
+  <g transform="translate(550, 295)" filter="url(#shadow2)">
+    <rect width="200" height="75" rx="6" fill="#4F46E5"/>
+    <text x="15" y="25" class="box-title">📊 Revenue API Service</text>
+    <text x="15" y="45" class="box-desc">Gọi Function doanh thu ngày/tháng,</text>
+    <text x="15" y="60" class="box-desc">Top món bán chạy</text>
+  </g>
+
+  <g transform="translate(775, 295)" filter="url(#shadow2)">
+    <rect width="165" height="75" rx="6" fill="#9333EA"/>
+    <text x="15" y="25" class="box-title">🖨️ Report Engine</text>
+    <text x="15" y="45" class="box-desc">Sinh mẫu Crystal Report,</text>
+    <text x="15" y="60" class="box-desc">VietQR &amp; In nhiệt POS</text>
+  </g>
+
+  <!-- LAYER 3: DATABASE (x=40, y=420) -->
+  <rect x="40" y="420" width="920" height="190" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="2"/>
+  <text x="60" y="450" class="layer-title">TẦNG CƠ SỞ DỮ LIỆU (DATABASE LAYER - SQL SERVER / T-SQL)</text>
+
+  <g transform="translate(60, 470)" filter="url(#shadow2)">
+    <rect width="240" height="120" rx="6" fill="#DC2626"/>
+    <text x="15" y="25" class="box-title">⚡ TRIGGERS (Nghiệp Vụ CSDL)</text>
+    <text x="15" y="48" class="box-desc">• trg_TruKhoKhiThanhToan (Trừ kho tự động)</text>
+    <text x="15" y="68" class="box-desc">• RAISERROR &amp; ROLLBACK khi thiếu kho</text>
+    <text x="15" y="88" class="box-desc">• trg_HoanKhoKhiHuy (Hoàn kho khi hủy)</text>
+    <text x="15" y="108" class="box-desc">• trg_CapNhatTongTienHoaDon</text>
+  </g>
+
+  <g transform="translate(330, 470)" filter="url(#shadow2)">
+    <rect width="280" height="120" rx="6" fill="#047857"/>
+    <text x="15" y="25" class="box-title">📈 USER-DEFINED FUNCTIONS (UDF)</text>
+    <text x="15" y="48" class="box-desc">• fn_TinhDoanhThuTheoNgay(@Ngay)</text>
+    <text x="15" y="68" class="box-desc">• fn_TinhDoanhThuTheoThang(@Thang, @Nam)</text>
+    <text x="15" y="88" class="box-desc">• fn_ThongKeMonBanChay(@Tu, @Den, @Top)</text>
+    <text x="15" y="108" class="box-desc">• fn_CanhBaoNguyenLieuSapHet()</text>
+  </g>
+
+  <g transform="translate(640, 470)" filter="url(#shadow2)">
+    <rect width="300" height="120" rx="6" fill="#0F766E"/>
+    <text x="15" y="25" class="box-title">💾 RELATIONAL TABLES (15 BẢNG 3NF)</text>
+    <text x="15" y="48" class="box-desc">• NhanVien, VaiTro, DanhMuc, SanPham</text>
+    <text x="15" y="68" class="box-desc">• NguyenLieu, DinhLuong (Recipe công thức)</text>
+    <text x="15" y="88" class="box-desc">• HoaDon, ChiTietHoaDon, Ban, KhachHang</text>
+    <text x="15" y="108" class="box-desc">• PhieuNhapKho, ChiTietPhieuNhap, LichSuKho</text>
+  </g>
+
+</svg>
