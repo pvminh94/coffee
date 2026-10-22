@@ -93,7 +93,18 @@ Quy trình nghiệp vụ thực tế được khảo sát gồm 4 luồng chính
 
 # CHƯƠNG 2: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
-### 2.1. Biểu đồ Use Case và phân quyền hệ thống
+### 2.1. Phân tích Mô hình Mini-ERP chuyên sâu cho Chuỗi F&B
+Trong doanh nghiệp, **ERP (Enterprise Resource Planning - Hoạch định nguồn lực doanh nghiệp)** là mô hình tích hợp toàn diện các phân hệ hoạt động xoay quanh một cơ sở dữ liệu dùng chung duy nhất. Đối với đề tài Quản lý Cửa hàng Cà phê / Trà sữa, hệ thống được thiết kế theo cấu trúc **Mini-ERP** bao gồm **5 phân hệ lõi** liên kết chặt chẽ:
+1. **Phân hệ Bán hàng (Sales & POS Module)**: Tiếp nhận đơn gọi món tại bàn hoặc mang đi, quản lý giỏ hàng, áp dụng voucher giảm giá, ghi nhận phương thức thanh toán và tạo hóa đơn bán hàng (, , ).
+2. **Phân hệ Định lượng (Recipe / BOM - Bill of Materials Module)**: Lưu trữ tỷ lệ nguyên liệu tiêu hao cho từng món theo từng kích cỡ ly (Size S, M, L). Đây là 'trái tim' công thức của quán, cung cấp định mức tiêu hao cho Trigger CSDL (, , ).
+3. **Phân hệ Quản trị Kho & Tồn kho (Inventory & Procurement Module)**: Quản lý tồn kho thực tế của các loại nguyên liệu thô (đơn vị: g, ml, cái), theo dõi ngưỡng an toàn tối thiểu (Low Stock), tạo phiếu nhập hàng từ nhà cung cấp và ghi nhật ký kiểm toán (Audit Trail) cho mọi lần biến động kho (, , ).
+4. **Phân hệ Kế toán - Doanh thu & Báo cáo (Finance & Analytics Module)**: Tự động tổng hợp và kết xuất doanh thu theo ngày, theo tháng thông qua các User-Defined Functions; quản lý công nợ, phương thức thanh toán (Tiền mặt, VietQR, Thẻ) và xuất mẫu hóa đơn Crystal Report (, ).
+5. **Phân hệ Nhân sự & Phân quyền (HR & RBAC Module)**: Quản lý danh sách nhân viên, tài khoản, ca làm việc và phân quyền truy cập theo vai trò (, ).
+
+![Mô hình ERP](diagrams/ERP_Model_Architecture.svg)
+*Hình 2.0: Mô hình Hệ thống ERP thu nhỏ Quản trị Cửa hàng Cà phê / Trà sữa*
+
+### 2.2. Biểu đồ Use Case và phân quyền hệ thống
 Hệ thống thiết kế theo cơ chế Phân quyền dựa trên vai trò (Role-Based Access Control - RBAC):
 - **Tác nhân Thu Ngân (Cashier)**:
   - Đăng nhập hệ thống bằng tài khoản được cấp.
@@ -113,12 +124,13 @@ Hệ thống thiết kế theo cơ chế Phân quyền dựa trên vai trò (Rol
   - Xem báo cáo doanh thu tài chính theo ngày/tháng qua các Function CSDL.
   - Quản lý danh sách nhân viên và tài khoản người dùng.
 
-### 2.2. Sơ đồ quy trình nghiệp vụ trừ kho tự động khi bán hàng
+### 2.3. Sơ đồ quy trình nghiệp vụ trừ kho tự động khi bán hàng
 Quy trình thực thi Trigger trừ kho diễn ra theo chuỗi logic nghiêm ngặt:
 1. Thu ngân bấm nút **"Thanh toán & Trừ Tồn Kho"**.
 2. Hệ thống đọc danh sách món và số lượng trong chi tiết hóa đơn.
 3. Ghép nối với bảng `DinhLuong` để tính toán tổng nhu cầu tiêu hao của từng nguyên liệu:
-   $$	ext{Tổng Nhu Cầu}(MaNL) = \sum \left( 	ext{Số Lượng Món Bán} 	imes 	ext{Định Lượng 1 Ly} ight)$$
+   $$	ext{Tổng Nhu Cầu}(MaNL) = \sum \left( 	ext{Số Lượng Món Bán} 	imes 	ext{Định Lượng 1 Ly} 
+ight)$$
 4. **Kiểm tra điều kiện toàn vẹn**:
    - Nếu tồn tại bất kỳ nguyên liệu nào mà $	ext{SoLuongTon} < 	ext{Tổng Nhu Cầu}$:
      * Hệ thống hủy giao dịch (`ROLLBACK TRANSACTION`).
@@ -129,7 +141,7 @@ Quy trình thực thi Trigger trừ kho diễn ra theo chuỗi logic nghiêm ng�
      * Cập nhật trạng thái hóa đơn sang `DaThanhToan`.
      * Xuất hóa đơn Crystal Report giao cho khách hàng.
 
-### 2.3. Mô hình Thực thể Kết hợp (ERD - Conceptual & Logical)
+### 2.4. Mô hình Thực thể Kết hợp (ERD - Conceptual & Logical)
 Hệ thống gồm 15 thực thể quan hệ:
 1. `VaiTro`: Lưu danh mục vai trò (`VT01`: Quản lý, `VT02`: Thu ngân).
 2. `NhanVien`: Hồ sơ và tài khoản nhân viên.
@@ -147,7 +159,7 @@ Hệ thống gồm 15 thực thể quan hệ:
 14. `ChiTietPhieuNhap`: Danh sách nguyên liệu và số lượng nhập trong phiếu.
 15. `LichSuKho`: Nhật ký biến động kho (Audit trail: bán hàng trừ kho, nhập kho cộng kho, hoàn kho).
 
-### 2.4. Phân tích chuẩn hóa cơ sở dữ liệu đạt chuẩn 3NF
+### 2.5. Phân tích chuẩn hóa cơ sở dữ liệu đạt chuẩn 3NF
 - **Chuẩn 1NF (First Normal Form)**:
   * Tất cả các trường trong các bảng đều có giá trị nguyên tử (Atomic values), không chứa thuộc tính lặp hay mảng đa trị.
   * Mỗi bảng đều có Khóa chính (Primary Key) xác định duy nhất từng bản ghi.
@@ -163,7 +175,7 @@ Hệ thống gồm 15 thực thể quan hệ:
     + Thông tin vai trò được tách sang `VaiTro`, `NhanVien` chỉ giữ khóa ngoại `MaVaiTro`.
     + Thông tin nguyên liệu được tách sang `NguyenLieu`, không lưu trùng lặp trong công thức.
 
-### 2.5. Từ điển dữ liệu chi tiết (Data Dictionary - 15 Bảng)
+### 2.6. Từ điển dữ liệu chi tiết (Data Dictionary - 15 Bảng)
 Dưới đây là đặc tả chi tiết một số bảng quan trọng nhất trong hệ thống:
 
 #### Bảng 1: `DinhLuong` (Công Thức Pha Chế - Recipe)

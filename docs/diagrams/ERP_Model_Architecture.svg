@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #4A2810; font-size: 24px; }
+      .sub { font-family: 'Segoe UI', Arial, sans-serif; fill: #64748B; font-size: 14px; }
+      .mod-title { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #ffffff; font-size: 15px; }
+      .mod-sub { font-family: 'Segoe UI', Arial, sans-serif; fill: #ffffff; font-size: 11.5px; opacity: 0.95; }
+      .core-txt { font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold; fill: #78350F; font-size: 16px; text-anchor: middle; }
+      .core-sub { font-family: 'Segoe UI', Arial, sans-serif; fill: #92400E; font-size: 12px; text-anchor: middle; }
+      .link-arrow { stroke: #D97706; stroke-width: 2.5; fill: none; stroke-dasharray: 4,4; }
+    </style>
+    <linearGradient id="grad-center" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FDE68A"/>
+    </linearGradient>
+    <linearGradient id="grad-pos" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="grad-recipe" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C2D12"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="grad-inv" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#065F46"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="grad-fin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4C1D95"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="grad-hr" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#831843"/>
+      <stop offset="100%" stop-color="#DB2777"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#F8FAFC"/>
+
+  <!-- HEADER -->
+  <text x="50" y="45" class="title">MÔ HÌNH HỆ THỐNG ERP THU NHỎ QUẢN TRỊ CỬA HÀNG F&amp;B</text>
+  <text x="50" y="70" class="sub">Tích hợp 5 Phân hệ lõi xoay quanh CSDL Microsoft SQL Server (IE103 Đề tài 2 - UIT)</text>
+
+  <!-- CENTER CORE DATABASE -->
+  <g transform="translate(450, 270)" filter="url(#shadow)">
+    <rect width="300" height="220" rx="16" fill="url(#grad-center)" stroke="#D97706" stroke-width="2.5"/>
+    <text x="150" y="45" class="core-txt">🗄️ TRUNG TÂM CSDL</text>
+    <text x="150" y="68" class="core-txt" style="font-size: 14px; fill: #B45309;">MICROSOFT SQL SERVER</text>
+    
+    <line x1="20" y1="85" x2="280" y2="85" stroke="#F59E0B" stroke-width="1"/>
+    
+    <text x="150" y="110" class="core-sub" style="font-weight: bold;">⚡ TRIGGER CỐT LÕI:</text>
+    <text x="150" y="130" class="core-sub">trg_HoaDon_TruKhoKhiThanhToan</text>
+    <text x="150" y="148" class="core-sub">(Kiểm tra &amp; tự động trừ kho nguyên liệu)</text>
+    
+    <text x="150" y="175" class="core-sub" style="font-weight: bold;">📊 USER-DEFINED FUNCTIONS:</text>
+    <text x="150" y="195" class="core-sub">fn_TinhDoanhThuTheoNgay/Thang</text>
+  </g>
+
+  <!-- MODULE 1: BÁN HÀNG & POS (TOP LEFT) -->
+  <g transform="translate(60, 110)" filter="url(#shadow)">
+    <rect width="320" height="150" rx="10" fill="url(#grad-pos)"/>
+    <text x="18" y="32" class="mod-title">🛒 1. PHÂN HỆ BÁN HÀNG (POS &amp; ORDER)</text>
+    <text x="18" y="58" class="mod-sub">• Gọi món theo kích cỡ ly (Size S, M, L)</text>
+    <text x="18" y="78" class="mod-sub">• Phục vụ tại chỗ (Bàn) hoặc Mang về</text>
+    <text x="18" y="98" class="mod-sub">• Áp dụng chiết khấu / voucher thành viên</text>
+    <text x="18" y="118" class="mod-sub">• Thanh toán: Tiền mặt, Chuyển khoản QR, Thẻ</text>
+    <text x="18" y="138" class="mod-sub">• Bảng quản lý: HoaDon, ChiTietHoaDon, Ban</text>
+  </g>
+
+  <!-- MODULE 2: ĐỊNH LƯỢNG SẢN PHẨM / RECIPE BOM (TOP RIGHT) -->
+  <g transform="translate(820, 110)" filter="url(#shadow)">
+    <rect width="320" height="150" rx="10" fill="url(#grad-recipe)"/>
+    <text x="18" y="32" class="mod-title">⚖️ 2. PHÂN HỆ ĐỊNH LƯỢNG (RECIPE / BOM)</text>
+    <text x="18" y="58" class="mod-sub">• Định mức tiêu hao nguyên liệu cho từng ly</text>
+    <text x="18" y="78" class="mod-sub">• Tỷ lệ biến đổi theo từng size S, M, L</text>
+    <text x="18" y="98" class="mod-sub">• Cung cấp dữ liệu định mức cho TRIGGER</text>
+    <text x="18" y="118" class="mod-sub">• Chuẩn hóa công thức pha chế toàn hệ thống</text>
+    <text x="18" y="138" class="mod-sub">• Bảng quản lý: DinhLuong, SanPham, SizeMon</text>
+  </g>
+
+  <!-- MODULE 3: QUẢN TRỊ KHO & TỒN KHO (BOTTOM RIGHT) -->
+  <g transform="translate(820, 500)" filter="url(#shadow)">
+    <rect width="320" height="150" rx="10" fill="url(#grad-inv)"/>
+    <text x="18" y="32" class="mod-title">📦 3. PHÂN HỆ KHO &amp; TỒN KHO (INVENTORY)</text>
+    <text x="18" y="58" class="mod-sub">• Theo dõi tồn kho thời gian thực (g, ml, cái)</text>
+    <text x="18" y="78" class="mod-sub">• Cảnh báo chạm ngưỡng tồn tối thiểu (Low Stock)</text>
+    <text x="18" y="98" class="mod-sub">• Lập phiếu nhập kho &amp; tính giá bình quân</text>
+    <text x="18" y="118" class="mod-sub">• Ghi nhật ký biến động kho (Audit trail)</text>
+    <text x="18" y="138" class="mod-sub">• Bảng: NguyenLieu, PhieuNhap, LichSuKho</text>
+  </g>
+
+  <!-- MODULE 4: TÀI CHÍNH & CRYSTAL REPORT (BOTTOM LEFT) -->
+  <g transform="translate(60, 500)" filter="url(#shadow)">
+    <rect width="320" height="150" rx="10" fill="url(#grad-fin)"/>
+    <text x="18" y="32" class="mod-title">🧾 4. PHÂN HỆ TÀI CHÍNH &amp; BÁO CÁO</text>
+    <text x="18" y="58" class="mod-sub">• Gọi Function fn_TinhDoanhThuTheoNgay</text>
+    <text x="18" y="78" class="mod-sub">• Gọi Function fn_TinhDoanhThuTheoThang</text>
+    <text x="18" y="98" class="mod-sub">• Xuất mẫu Crystal Report hóa đơn nhiệt 80mm</text>
+    <text x="18" y="118" class="mod-sub">• Tích hợp mã VietQR tự động thanh toán</text>
+    <text x="18" y="138" class="mod-sub">• Thống kê Top món bán chạy nhất</text>
+  </g>
+
+  <!-- MODULE 5: NHÂN SỰ & PHÂN QUYỀN (BOTTOM CENTER) -->
+  <g transform="translate(440, 580)" filter="url(#shadow)">
+    <rect width="320" height="130" rx="10" fill="url(#grad-hr)"/>
+    <text x="18" y="32" class="mod-title">👥 5. PHÂN HỆ NHÂN SỰ &amp; RBAC</text>
+    <text x="18" y="58" class="mod-sub">• Quản lý tài khoản nhân viên &amp; ca làm</text>
+    <text x="18" y="78" class="mod-sub">• Vai trò Quản Lý: Toàn quyền hệ thống</text>
+    <text x="18" y="98" class="mod-sub">• Vai trò Thu Ngân: Giới hạn bán hàng POS</text>
+    <text x="18" y="118" class="mod-sub">• Bảng quản lý: NhanVien, VaiTro</text>
+  </g>
+
+  <!-- CONNECTING ARROWS -->
+  <!-- POS -> DB -->
+  <path d="M 380 185 L 450 300" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <!-- Recipe -> DB -->
+  <path d="M 820 185 L 750 300" stroke="#EA580C" stroke-width="2.5"/>
+  <!-- DB -> Inventory -->
+  <path d="M 750 440 L 820 540" stroke="#059669" stroke-width="2.5"/>
+  <!-- DB -> Finance -->
+  <path d="M 450 440 L 380 540" stroke="#7C3AED" stroke-width="2.5"/>
+  <!-- DB -> HR -->
+  <path d="M 600 490 L 600 580" stroke="#DB2777" stroke-width="2.5"/>
+
+</svg>
